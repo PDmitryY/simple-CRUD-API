@@ -1,11 +1,8 @@
-import path from 'path';
-import {fileURLToPath} from 'url'
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const path = require('path');
 
 module.exports = {
   entry: path.resolve(__dirname, './src/index.ts'),
-  mode: profileEnd,
+  mode: 'production',
   module: {
     rules: [
       {

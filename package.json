@@ -5,8 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start:prod": "npx tsc",
+    "start:prod": "npm run build && node dist/bundle.js",
     "start:dev": "nodemon --exec node --loader ts-node/esm src/index.ts",
+    "build": "webpack",
     "deploy": "gh-pages -d dist -e simple-CRUD-API",
     "test": "npx jest"
   },

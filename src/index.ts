@@ -5,14 +5,14 @@ import { validate, v4 as uuidv4 } from 'uuid';
 
 const port = process.env.PORT || 4000;
 let users: User[] = [];
-console.log("users", users);
+// console.log("users", users);
 
 const server = createServer((request: IncomingMessage, response: ServerResponse) => {
   const { method, url } = request;
-  console.log("url", url);
-  console.log("method", method);
+  // console.log("url", url);
+  // console.log("method", method);
   const userId = url.split('/')[3]
-  console.log("userId", userId);
+  // console.log("userId", userId);
 
   if(url === '/api/users') {
     if(method === 'GET') {
@@ -24,8 +24,7 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
         response.writeHead(500, { 'Content-Type': 'application/json' });
         response.end(JSON.stringify(e.message));
       };
-    };
-    if(method === 'POST') {
+    } else if (method === 'POST') {
       console.log(4)
       try{
         let body = '';
@@ -61,11 +60,12 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
       }
     };
   } else if (url === `/api/users/${userId}`){
+    if (!validate(userId)) {
+      response.writeHead(400, { 'Content-Type': 'application/json' });
+      response.end(JSON.stringify('Username is not valid'));
+      return;
+    }
     users.forEach((el, i)=>{
-      if (!validate(userId)) {
-        response.writeHead(400, { 'Content-Type': 'application/json' });
-        response.end(JSON.stringify('Username is not valid'));
-      }
       if(el.id === userId) {
         if(method === 'GET') {
           console.log(2);
@@ -76,8 +76,7 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
             response.writeHead(500, { 'Content-Type': 'application/json' });
             response.end(JSON.stringify(e.message)); 
           };
-        };
-        if(method === 'PUT') {
+        } else if(method === 'PUT') {
           console.log(3);
           try{
             let body = '';
@@ -98,8 +97,7 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
             response.writeHead(500, { 'Content-Type': 'application/json' });
             response.end(JSON.stringify(e.message));
           };
-        };
-        if(method === 'DELETE') {
+        } else if (method === 'DELETE') {
           console.log(5);
           try{
             response.writeHead(204, { 'Content-Type': 'application/json' });
