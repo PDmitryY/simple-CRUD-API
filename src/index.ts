@@ -73,6 +73,12 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
           throw new Error(e)
         }
       };
+      if(url === `/api/users/${userId}` && method === 'DELETE') {
+        console.log(5);
+        response.writeHead(204, { 'Content-Type': 'application/json' });
+        users.splice(i, 1);
+        response.end(JSON.stringify(users[i]));
+      };
     } 
   })
 });
