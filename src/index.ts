@@ -20,19 +20,7 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
     response.writeHead(200, { 'Content-Type': 'application/json' });
     response.end(JSON.stringify({ users }));
   };
-  users.forEach((el, i)=>{
-    if(el.id === userId) {
-      if(url === `/api/users/${userId}` && method === 'GET') {
-        console.log(2)
-        response.writeHead(200, { 'Content-Type': 'application/json' });
-        response.end(JSON.stringify(users[i]));
-      };
-      if(url === `/api/users/${userId}` && method === 'GET') {
-        console.log(3)
-      };
-    } 
-  })
-  if(url === `/api/users/${userId}` && method === 'POST') {
+  if(url === `/api/users` && method === 'POST') {
     console.log(4)
     try{
       let body = '';
@@ -57,6 +45,36 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
       throw new Error(e)
     }
   };
+  users.forEach((el, i)=>{
+    if(el.id === userId) {
+      if(url === `/api/users/${userId}` && method === 'GET') {
+        console.log(2);
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.end(JSON.stringify(users[i]));
+      };
+      if(url === `/api/users/${userId}` && method === 'PUT') {
+        console.log(3);
+        try{
+          let body = '';
+          // console.log('body', body)
+          request.on('data', (chunk)=>{body += chunk.toString()});
+          request.on('end', () => {
+            // console.log('body', body)
+            const newData = JSON.parse(body);
+            users[i].username = newData.username || users[i].username;
+            users[i].age = newData.age || users[i].age;
+            users[i].hobbies = newData.hobbies || users[i].hobbies;
+            // console.log('newUser', newUser);
+            // console.log('users', users);
+            response.writeHead(201, { 'Content-Type': 'application/json' });
+            response.end(JSON.stringify(users[i]));
+          });
+        } catch (e) {
+          throw new Error(e)
+        }
+      };
+    } 
+  })
 });
 
 async function startApp() {
